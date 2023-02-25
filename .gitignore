@@ -6,3 +6,9 @@
 
 # Output of the go coverage tool, specifically when used with LiteIDE
 *.out
+
+# ignored pkgs
+static
+
+# ignore logs
+log_file.json
