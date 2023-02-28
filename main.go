@@ -6,7 +6,7 @@ import (
 )
 
 func main() {
-	logFileName := "log_file.json"
+	logFileName := "api.json.log"
 	logger := utils.InitializeSugarLogger(logFileName)
 	port := ":8080"
 	apiv1.SetupRoutes(logger, port)

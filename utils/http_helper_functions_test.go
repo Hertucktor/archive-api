@@ -7,42 +7,6 @@ import (
 	"testing"
 )
 
-func TestCorsOriginMiddleware(t *testing.T) {
-	// Create a mock HTTP response
-	rr := httptest.NewRecorder()
-
-	// Create a mock HTTP request with a fake URL
-	req, err := http.NewRequest("GET", "http://example.com/path/to/fake/resource", nil)
-	if err != nil {
-		t.Fatal(err)
-	}
-
-	// Create a dummy handler that simply writes a response
-	handler := http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		_, err = w.Write([]byte("Hello, world!"))
-		if err != nil {
-			t.Error(err)
-		}
-	})
-
-	// Wrap the dummy handler with the CorsOriginMiddleware
-	wrappedHandler := CorsOriginMiddleware(handler)
-
-	// Call the wrapped handler with the mock request and response
-	wrappedHandler.ServeHTTP(rr, req)
-
-	// Verify that the HTTP response has the correct Access-Control-Allow-Origin header
-	if origin := rr.Header().Get("Access-Control-Allow-Origin"); origin != "*" {
-		t.Errorf("handler returned wrong Access-Control-Allow-Origin header: got %v want %v", origin, "*")
-	}
-
-	// Verify that the HTTP response body contains the expected message
-	expected := "Hello, world!"
-	if body := rr.Body.String(); body != expected {
-		t.Errorf("handler returned unexpected body: got %v want %v", body, expected)
-	}
-}
-
 func TestNotFoundHandler(t *testing.T) {
 	// Create a new Gin router and register the NotFoundHandler
 	router := gin.Default()

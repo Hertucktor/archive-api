@@ -11,4 +11,4 @@
 static
 
 # ignore logs
-log_file.json
+api.json.log

@@ -2,6 +2,7 @@ package apiv1
 
 import (
 	"github.com/Hertucktor/archive-api/utils"
+	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
 	"go.uber.org/zap"
 	"net/http"
@@ -20,24 +21,31 @@ func SetupRoutes(logger *zap.SugaredLogger, port string) {
 	router := gin.Default()
 	router.NoRoute(utils.NotFoundHandler)
 
-	// V1
-	//v1 := router.Group("/v1")
 	//Status calls
 	statusRouter := router.Group("/status")
 	{
 		statusRouter.GET("/alive", statusAlive)
 		statusRouter.GET("/check", statusCheck)
 	}
+	// TODO: setup cors handling
+	// V1
+	v1 := router.Group("/v1")
+	v1.Use(cors.Default())
+
 	//CRUD route for card info
-	//api := router.PathPrefix("/api").Subrouter()
-	//api.Use(mux.CORSMethodMiddleware(api), corsOriginMiddleware)
-	//api.HandleFunc("/card", createNewCardEntryOnAllCardCollection).Methods(http.MethodPost)
-	//api.HandleFunc("/cards", returnAllCardEntriesFromAllCardCollection).Methods(http.MethodGet)                            //From allCards Coll
-	//api.HandleFunc("/cards/set-names/{setName}", returnAllCardsBySetFromAllCardCollection).Methods(http.MethodGet)         //From allCards Coll
-	//api.HandleFunc("/cards/collector-numbers/{number}/set-names/{setName}", readFromOwnCollection).Methods(http.MethodGet) //From myCards Coll
-	//api.HandleFunc("/cards/collector-number/{number}/set-names/{setName}", updateSingleCardFromOwnCollection).Methods(http.MethodPut)
-	//api.HandleFunc("/cards/collector-number/{number}/set-names/{setName}", deleteSingleCardFromOwnCollection).Methods(http.MethodDelete)
-	//api.HandleFunc("/cards/set-names", returnAllSetName).Methods(http.MethodGet)
+	archive := v1.Group("/archive")
+	archive.Use(cors.Default())
+	{
+		archive.POST("/card", createNewCardEntryOnAllCardCollection)
+		//archive.GET("/cards", returnAllCardEntriesFromAllCardCollection)
+		//archive.GET("/cards/set-names/{setName}", returnAllCardsBySetFromAllCardCollection)
+		//archive.GET("/cards/set-names/{setName}", returnAllCardsBySetFromAllCardCollection)
+		//archive.GET("/cards/collector-numbers/{number}/set-names/{setName}", readFromOwnCollection)
+		//archive.PUT("/cards/collector-number/{number}/set-names/{setName}", updateSingleCardFromOwnCollection)
+		//archive.DELETE("/cards/collector-number/{number}/set-names/{setName}", deleteSingleCardFromOwnCollection)
+		//archive.GET("/cards/set-names", returnAllSetName)
+	}
+
 	//API Operations for img info
 	//img := router.PathPrefix("/img").Subrouter()
 	//img.HandleFunc("/set-names/{setName}", returnSingleImg).Methods(http.MethodGet)
